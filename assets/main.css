@@ -1,0 +1,21 @@
+textarea.form-control {
+  height: 100%;
+  opacity: 50;
+  font-size: 18px;
+}
+
+body {
+		font-family: Verdana, Arial, Helvetica, sans-serif, times, "Heiti TC", PMingLiU, PMingLiu-ExtB, SimSun, SimSun-ExtB, HanaMinA, HanaMinB;
+}
+
+.desc {
+	text-align: right;
+}
+
+del {
+	background:#ffe6e6;
+}
+
+ins {
+	background:#e6ffe6;
+}

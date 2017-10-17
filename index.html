@@ -1,19 +1,223 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
+	  <meta charset="utf-8">
+      <title>Hanzi Text Normalizer</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  <script>
+		//   https://imfly.gitbooks.io/electron-docs-gitbook/content/ko-KR/faq.html
+		window.nodeRequire = require;
+		delete window.require;
+		delete window.exports;
+		delete window.module;
+	  </script>
+
+	  <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+      <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+	  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+      <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+      <link rel="stylesheet" href="assets/main.css">
+
+	  <script src="node_modules/angular/angular.min.js"></script>
+	  <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+	  <script src="assets/prototype.js"></script>
+
   </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+
+  <body ng-app="hanzitn">
+   <!--header-->
+   <div class="navbar navbar-default navbar-static-top">
+	 <div class="container">
+	   <div class="navbar-header">
+		 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+		   <span class="sr-only">Toggle navigation</span>
+		   <span class="icon-bar"></span>
+		   <span class="icon-bar"></span>
+		   <span class="icon-bar"></span>
+		 </button>
+		 <a class="navbar-brand" href="/"><span>Hanzi Text Normalizer</span></a>
+	   </div>
+	   <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+		 <ul class="nav navbar-nav navbar-right">
+		   <li class="active">
+			 <a href="https://mediclassics.github.io">Mediclassics Info</a>
+		   </li>
+		   <li>
+			 <a href="https://github.com/mediclassics/apps/issues">Contacts</a>
+		   </li>
+		 </ul>
+	   </div>
+	 </div>
+   </div>
+
+   <!--main-->
+   <div class="section" ng-controller="duplicationsMergeCtrl">
+	 <div class="container">
+	   <div class="row">
+		   <div class="col-md-6">
+			   <h1>
+				   <i class="fa fa-spinner fa-fw" ng-class="{'fa-pulse': dupProcessing}"></i>
+				   Merge Hanzi Duplications
+			   </h1>
+			   <p class="desc">다중코드자를 통합합니다.</p>
+		   </div>
+		   <div class="col-md-6">
+			   <h1>
+				   <button class="btn btn-primary btn-lg" ng-click="mergeDuplications()">TN</button>
+			   </h1>
+		   </div>
+	   </div>
+	   <div class="row">
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5" style="height:30%"
+			   ng-model="rawTextdup"
+			   ng-trim="true"
+		   ></textarea>
+		 </div>
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5" style="height:30%"
+			   ng-bind="mergedTextdup"
+		   ></textarea>
+		 </div>
+	   </div>
+	 </div>
+   </div>
+
+   <div class="section" ng-controller="variantsMergeCtrl">
+	 <div class="container">
+	   <div class="row">
+		   <div class="col-md-6">
+			   <h1>
+				   <i class="fa fa-spinner fa-fw" ng-class="{'fa-pulse': valProcessing}"></i>
+				   Merge Hanzi Variants
+			   </h1>
+			   <p class="desc">
+				   이체자를 통합합니다.
+			   </p>
+		   </div>
+		   <div class="col-md-6">
+			   <h1>
+				   <button class="btn btn-primary btn-lg" ng-click="mergeVariants()">TN</button>
+				   <div class="btn-group">
+					   <a class="btn btn-lg btn-warning" ng-class="{'active': tntype==='general'}" ng-click="tntype='general'" >General</a>
+					   <a class="btn btn-lg btn-warning" ng-class="{'active': tntype!=='general'}" ng-click="tntype='extention'">KM-extention</a>
+				   </div>
+			   </h1>
+		   </div>
+	   </div>
+	   <div class="row">
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5"  style="height:30%"
+			   ng-model="rawTextvar"
+			   ng-trim="true"
+		   ></textarea>
+		 </div>
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5"  style="height:30%"
+			   ng-bind="mergedTextvar"
+		   ></textarea>
+		 </div>
+	   </div>
+	 </div>
+   </div>
+
+   <div class="section" ng-controller="replaceCtrl">
+	 <div class="container">
+
+	   <form class="form-inline">
+		   <div class="col-md-6">
+			   <h1>Replace	</h1>
+		   </div>
+		   <div class="col-md-6">
+			   <h1>
+				   <button type="submit" class="btn btn-primary btn-lg" ng-click="replaceAll()">Replace</button>
+				   <button type="submit" class="btn btn-info btn-lg" ng-click="clone()">Clone</button>
+			   </h1>
+		   </div>
+
+		   <div class="form-group">
+			   <input type="text" class="form-control" placeholder="Before(Regx)" ng-model="bf">
+		   </div>
+		   <div class="form-group">
+			   <input type="text" class="form-control" placeholder="After" ng-model="af">
+		   </div>
+
+	   </form>
+
+	   <div class="row" >
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5" style="height:30%"
+			   ng-model="rawText"
+			   ng-trim="true"
+		   ></textarea>
+		 </div>
+		 <div class="col-md-6">
+		   <textarea class="form-control" rows="5" style="height:30%"
+			   ng-bind="mergedText"
+		   ></textarea>
+		 </div>
+	   </div>
+	 </div>
+   </div>
+
+
+   <div class="section" ng-controller="diffCtrl">
+	 <div class="container">
+	   <div class="row">
+		   <div class="col-md-6">
+			   <h1>
+				   <i class="fa fa-spinner fa-fw" ng-class="{'fa-pulse': valProcessing}"></i>
+				   Check result
+			   </h1>
+		   </div>
+		   <div class="col-md-6">
+			   <h1>
+				   <button class="btn btn-primary btn-lg" ng-click="diff()">Diff</button>
+				   <button class="btn btn-warning btn-lg" ng-click="reset()">Reset</button>
+			   </h1>
+		   </div>
+	   </div>
+	   <div class="row">
+		   <div class="col-md-12" >
+			   <div class="well" style="min-height:30%" ng-bind-html="diffrst" >
+			   </div>
+		   </div>
+	   </div>
+   </div>
+
+   <!--footer-->
+   <footer class="section section-primary" ng-controller="footerCtrl">
+	 <div class="container">
+
+	   <div class="row">
+		   <h1>Appendix</h1>
+		   <div class="col-sm-12 text-left">
+			   <!-- <b>Dict Ref</b>
+			   <p>
+				   <a class="btn btn-info btn-sm" ng-repeat="dict in dictRefAddress" ng-href="{{dict.url}}" target="_blank" ng-bind="dict.name"></a>
+			   </p> -->
+			   <b>External Ref</b>
+			   <p>
+				   <a class="btn btn-info btn-sm" ng-repeat="eref in externalRefs" ng-href="{{eref.url}}" target="_blank" ng-bind="eref.name"></a>
+			   </p>
+			   <b>External Tools</b>
+			   <p>
+				   <a class="btn btn-info btn-sm" ng-repeat="etool in externalTools" ng-href="{{etool.url}}" target="_blank" ng-bind="etool.name"></a>
+			   </p>
+
+		 </div>
+
+	   </div>
+	 </div>
+   </footer>
 
     <script>
       // You can also require other files to run in this process
-      require('./renderer.js')
+      nodeRequire('./renderer.js')
     </script>
+
   </body>
+
 </html>

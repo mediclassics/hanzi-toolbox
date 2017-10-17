@@ -1,22 +1,48 @@
 {
-  "name": "electron-quick-start",
+  "name": "Hanzi-Text-Normalizer",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Hanzi Text Normalizer",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "electron . --debug",
+    "test": "mocha && standard",
+    "package": "npm-run-all package:*",
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: GitHub' --extend-info=assets/mac/info.plist",
+    "package:win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --out=out --icon=assets/app-icon/win/app.ico",
+    "package:linux": "electron-packager . --overwrite --platform=linux --arch=x64 --out=out",
+    "package:sign-exe": "signcode './out/Electron API Demos-win32-ia32/Electron API Demos.exe' --cert ~/electron-api-demos.p12 --prompt --name 'Electron API Demos' --url 'http://electron.atom.io'",
+    "package:installer": "node ./script/installer.js",
+    "package:sign-installer": "signcode './out/windows-installer/ElectronAPIDemosSetup.exe' --cert ~/electron-api-demos.p12 --prompt --name 'Electron API Demos' --url 'http://electron.atom.io'",
+    "package:mas": "./script/mas.sh",
+    "windows-store": "node ./script/windows-store.js",
+    "release": "node ./script/release.js",
+    "prepack": "check-for-leaks",
+    "prepush": "check-for-leaks"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Hanzi",
+    "text",
+    "normalization",
+    "preprocess"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Junho",
+  "license": "BY-NC-ND",
   "devDependencies": {
-    "electron": "~1.7.8"
+    "electron": "~1.6.2",
+    "electron-packager": "^8.7.2",
+    "electron-winstaller": "^2.2.0"
+  },
+  "dependencies": {
+    "electron-settings": "^3.0.7",
+    "electron-shortcut-normalizer": "^1.0.0",
+    "angular": "~1.5.0",
+    "angular-sanitize": "~1.5.0",
+    "bootstrap": "~3.3.4",
+    "diff-match-patch": "^1.0.0",
+    "electron": "~1.6.2",
+    "font-awesome": "~4.3.0",
+    "jquery": "~2.1.0"
   }
 }
