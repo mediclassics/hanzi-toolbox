@@ -26,7 +26,7 @@ function getInstallerConfig () {
   return Promise.resolve({
     appDirectory: path.join(outPath, pjson.name + common.winpackSuffix ),
     exe: pjson.name + '.exe',
-    iconUrl: 'https://raw.githubusercontent.com/electron/electron-api-demos/master/assets/app-icon/win/app.ico',
+    iconUrl: 'https://rawgit.com/mediclassics/hanzi-toolbox/master/assets/app-icon/win/app.ico',
     loadingGif: path.join(rootPath, 'assets', 'img', 'loading.gif'),
     noMsi: true,
     outputDirectory: path.join(outPath, pjson.name + common.installerSuffix ),
